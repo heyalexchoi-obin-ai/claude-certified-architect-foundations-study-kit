@@ -2,7 +2,7 @@
 
 An open, self-contained study kit for the **Claude Certified Architect – Foundations** exam: a condensed high-yield study guide, a 60-question practice exam, and a full answer key with explanations.
 
-> **Unofficial.** Not affiliated with, authorized, or endorsed by Anthropic. "Claude" and the certification name belong to Anthropic and are used here only to identify the exam this kit prepares for. These materials are **original work**, synthesized from the *publicly described* structure of Anthropic's official exam guide (domains, task statements, scenarios, and sample-question style). The official exam guide is Anthropic's copyrighted material and is **not redistributed here** — get it from the official source (below). The practice questions are **calibrated approximations, not real exam items**; there is no guarantee they match what you'll see. No exam dumps.
+> **Unofficial.** Not affiliated with, authorized, or endorsed by Anthropic. "Claude" and the certification name belong to Anthropic and are used here only to identify the exam this kit prepares for. The study guide, practice exam, and answer key are **original work**, synthesized from the *publicly described* structure of Anthropic's official exam guide (domains, task statements, scenarios, sample-question style); the practice questions are **calibrated approximations, not real exam items** — no guarantee they match what you'll see, and they are not exam dumps. This repo also includes `exam-guide.md`, a Markdown **transcription of Anthropic's official exam guide**: that content is **© Anthropic, All Rights Reserved**, reproduced here for educational reference only. If you hold the rights and want it removed, open an issue and it will be taken down promptly. Always prefer the official source (linked below).
 
 ---
 
@@ -38,11 +38,12 @@ The exam tests judgment, not trivia. The core insight behind this kit: the same 
 | [`study-guide.md`](study-guide.md) | The high-yield doc. **§2 "The 12 Decision Heuristics" is the crux of the exam** — the recurring tradeoffs every answer turns on. Plus per-domain cheat sheets, factual recall (CLI flags, file paths, config keys), out-of-scope list, and common distractor traps. | **1 — read first** |
 | [`practice-exam.md`](practice-exam.md) | 60 scenario-based questions, organized under the 6 official scenarios, each tagged with its domain and weighted to approximate the real exam. No answers inline. | **2 — take timed** |
 | [`practice-exam-answers.md`](practice-exam-answers.md) | Answer key: correct letter + concise explanation per question, each citing the heuristic it tests. | **3 — grade & review** |
+| [`exam-guide.md`](exam-guide.md) | Markdown transcription of Anthropic's official exam guide (**© Anthropic** — see disclaimer above) — the underlying source the rest is derived from. | reference |
 
 ### How the materials relate
 
 ```
-Anthropic's official exam guide  (the source — NOT included; link below)
+Anthropic's official exam guide  (included as exam-guide.md — © Anthropic)
         │  (its task statements + sample questions describe what's tested)
         ▼
 study-guide.md     →  distilled rules: the 12 heuristics + cheat sheets + recall

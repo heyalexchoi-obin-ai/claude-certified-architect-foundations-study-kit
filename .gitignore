@@ -1,10 +1,6 @@
-# Anthropic's copyrighted official exam guide — NOT redistributed.
-# Kept locally for the author's reference only.
+# Source PDF of Anthropic's exam guide (binary original) — not committed.
+# The Markdown transcription (exam-guide.md) IS included, with attribution.
 exam-guide.pdf
-exam-guide.md
-
-# Personal Claude Code control doc (contains owner contact + private notes).
-CLAUDE.md
 
 # OS / editor cruft
 .DS_Store
