@@ -73,7 +73,8 @@ A focused path, ~4–5 hours if you already build with this stack:
 
 The authoritative source — and the official practice exam — come from Anthropic's certification portal. Get the official exam guide, confirm logistics (cost, scheduling, proctoring, retake policy, validity), and register here:
 
-- **Anthropic certification (Skilljar):** https://anthropic.skilljar.com/claude-certified-architect-foundations-access-request *(may require an access request / sign-in)*
+- **Official exam guide (PDF, © Anthropic):** [Claude Certified Architect – Foundations Certification Exam Guide](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F8lsy243ftffjjy1cx9lm3o2bw%2Fpublic%2F1773274827%2FClaude+Certified+Architect+%E2%80%93+Foundations+Certification+Exam+Guide.pdf) — the canonical source `exam-guide.md` transcribes. *(Anthropic/Everpath-hosted link; may move over time.)*
+- **Anthropic certification (Skilljar):** https://anthropic.skilljar.com/claude-certified-architect-foundations-access-request *(may require an access request / sign-in; needed for logistics + the official practice exam)*
 
 Always defer to the official guide where it differs from anything here.
 
