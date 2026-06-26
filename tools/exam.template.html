@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCA–Foundations Practice Exam</title>
+<style>
+  :root{
+    --paper:#FAF9F5; --ink:#2A2A27; --muted:#6B6B63; --line:#E7E4DA;
+    --card:#FFFFFF; --clay:#CC6B49; --clay-dark:#B5532F; --clay-tint:#FBEEE7;
+    --good:#15803D; --good-tint:#E5F2E9; --warn:#B45309; --warn-tint:#FAF0DD;
+    --bad:#B91C1C; --bad-tint:#FBE9E9;
+    --shadow:0 1px 2px rgba(0,0,0,.04), 0 6px 18px rgba(0,0,0,.05);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:.88em; background:#F1EFE7; border:1px solid var(--line);
+    padding:.05em .35em; border-radius:5px; word-break:break-word;
+  }
+  a{color:var(--clay-dark)}
+  .wrap{max-width:820px; margin:0 auto; padding:28px 20px 80px}
+  .topbar{display:flex; align-items:center; gap:12px; margin-bottom:6px}
+  .logo{width:30px;height:30px;border-radius:8px;background:var(--clay);flex:0 0 auto;
+        display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px}
+  h1{font-size:1.45rem; margin:0; letter-spacing:-.01em}
+  .sub{color:var(--muted); margin:.15rem 0 0; font-size:.95rem}
+  .hr{height:1px;background:var(--line);border:0;margin:24px 0}
+
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+        box-shadow:var(--shadow); padding:20px}
+  .mode-card{margin-bottom:16px}
+  .mode-card h3{margin:0 0 4px; font-size:1.06rem}
+  .mode-card p{margin:0 0 14px; color:var(--muted); font-size:.92rem}
+
+  .btn{appearance:none; border:1px solid var(--line); background:#fff; color:var(--ink);
+       font:inherit; font-weight:600; padding:10px 16px; border-radius:10px; cursor:pointer;
+       transition:transform .04s ease, background .15s ease, border-color .15s ease}
+  .btn:hover{border-color:#cfccc1; background:#FCFBF7}
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:var(--clay); border-color:var(--clay); color:#fff}
+  .btn.primary:hover{background:var(--clay-dark); border-color:var(--clay-dark)}
+  .btn.ghost{background:transparent}
+  .btn.sm{padding:7px 12px; font-size:.9rem}
+  .btn:disabled{opacity:.5; cursor:not-allowed}
+  .btn-row{display:flex; flex-wrap:wrap; gap:10px}
+
+  .seg{display:inline-flex; gap:8px; flex-wrap:wrap}
+  .chip-btn{border:1px solid var(--line); background:#fff; border-radius:10px; padding:9px 14px;
+            cursor:pointer; font:inherit; font-weight:600; text-align:left}
+  .chip-btn:hover{border-color:var(--clay); background:var(--clay-tint)}
+  .chip-btn .cap{display:block; font-size:.78rem; color:var(--muted); font-weight:500; margin-top:2px}
+
+  .toggle{display:flex; align-items:center; gap:9px; color:var(--muted); font-size:.92rem; margin-top:14px; cursor:pointer; user-select:none}
+  .toggle input{width:16px;height:16px;accent-color:var(--clay)}
+
+  .tag{display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.02em;
+       padding:3px 9px; border-radius:999px; border:1px solid transparent; white-space:nowrap}
+
+  /* exam */
+  .examhead{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; flex-wrap:wrap}
+  .examhead .meta{color:var(--muted); font-size:.9rem; font-weight:600}
+  .progress{height:7px; background:#EDEAE1; border-radius:999px; overflow:hidden; margin:6px 0 18px}
+  .progress > i{display:block; height:100%; background:var(--clay); border-radius:999px; transition:width .2s ease}
+  .navgrid{display:flex; flex-wrap:wrap; gap:7px; margin:0 0 18px}
+  .navgrid b{font-weight:600; color:var(--muted); font-size:.82rem; width:100%; margin-bottom:2px}
+  .nav-chip{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;
+            cursor:pointer;font:inherit;font-size:.82rem;color:var(--muted);display:flex;align-items:center;justify-content:center}
+  .nav-chip:hover{border-color:var(--clay)}
+  .nav-chip.answered{background:var(--clay-tint); border-color:var(--clay); color:var(--clay-dark); font-weight:700}
+  .nav-chip.current{outline:2px solid var(--clay); outline-offset:1px}
+  .nav-chip.correct{background:var(--good-tint); border-color:var(--good); color:var(--good)}
+  .nav-chip.wrong{background:var(--bad-tint); border-color:var(--bad); color:var(--bad)}
+
+  .qmeta{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; align-items:center}
+  .qtext{font-size:1.08rem; margin:0 0 18px; line-height:1.5}
+  .opts{display:flex; flex-direction:column; gap:10px; margin:0}
+  .opt{display:flex; gap:12px; align-items:flex-start; border:1px solid var(--line); background:#fff;
+       border-radius:12px; padding:13px 15px; cursor:pointer; text-align:left; font:inherit; width:100%;
+       transition:border-color .12s ease, background .12s ease}
+  .opt:hover{border-color:var(--clay); background:#FDFBF8}
+  .opt.sel{border-color:var(--clay); background:var(--clay-tint)}
+  .opt .ltr{flex:0 0 auto; width:26px;height:26px;border-radius:7px;border:1px solid var(--line);
+            display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:var(--muted);background:#fff}
+  .opt.sel .ltr{background:var(--clay); color:#fff; border-color:var(--clay)}
+  .opt .otxt{flex:1; padding-top:1px}
+  /* review states */
+  .opt.correct{border-color:var(--good); background:var(--good-tint)}
+  .opt.correct .ltr{background:var(--good); color:#fff; border-color:var(--good)}
+  .opt.incorrect{border-color:var(--bad); background:var(--bad-tint)}
+  .opt.incorrect .ltr{background:var(--bad); color:#fff; border-color:var(--bad)}
+  .opt .mark{margin-left:auto; font-weight:800; font-size:1.05rem; flex:0 0 auto}
+  .opt.correct .mark{color:var(--good)}
+  .opt.incorrect .mark{color:var(--bad)}
+
+  .expl{margin-top:14px; padding:13px 15px; background:#F6F4EC; border:1px solid var(--line);
+        border-radius:12px; font-size:.93rem}
+  .expl .lbl{font-weight:700; color:var(--clay-dark); font-size:.78rem; letter-spacing:.03em; text-transform:uppercase; display:block; margin-bottom:4px}
+
+  .footbar{display:flex; justify-content:space-between; gap:10px; margin-top:22px}
+
+  /* results */
+  .score{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap}
+  .score .big{font-size:3rem; font-weight:800; letter-spacing:-.02em; line-height:1}
+  .score .pct{font-size:1.3rem; font-weight:700; color:var(--muted)}
+  .verdict{margin-top:16px; padding:14px 16px; border-radius:12px; border:1px solid transparent}
+  .verdict.good{background:var(--good-tint); border-color:#bfe0c9; color:#14532D}
+  .verdict.warn{background:var(--warn-tint); border-color:#ecd6a8; color:#7c3a06}
+  .verdict.bad{background:var(--bad-tint); border-color:#f0c5c5; color:#7f1d1d}
+  .verdict b{display:block; font-size:1.02rem; margin-bottom:2px}
+
+  .dombars{display:flex; flex-direction:column; gap:13px; margin-top:6px}
+  .dombar .row{display:flex; justify-content:space-between; gap:10px; font-size:.9rem; margin-bottom:5px}
+  .dombar .nm{font-weight:600}
+  .dombar .sc{color:var(--muted); font-weight:600; white-space:nowrap}
+  .dombar .track{height:9px; background:#EDEAE1; border-radius:999px; overflow:hidden}
+  .dombar .track > i{display:block; height:100%; border-radius:999px; transition:width .3s ease}
+
+  .section-title{font-size:1.1rem; margin:30px 0 12px; font-weight:700}
+  .review-q{margin-bottom:14px}
+  .attempts{list-style:none; padding:0; margin:8px 0 0}
+  .attempts li{display:flex; justify-content:space-between; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); font-size:.9rem}
+  .attempts li:last-child{border-bottom:0}
+  .attempts .when{color:var(--muted)}
+  .muted{color:var(--muted)}
+  .small{font-size:.85rem}
+  .center{text-align:center}
+  .stack > * + *{margin-top:10px}
+  footer.fineprint{margin-top:40px; color:var(--muted); font-size:.82rem; text-align:center}
+  @media(max-width:540px){
+    .wrap{padding:18px 14px 70px}
+    .score .big{font-size:2.4rem}
+    .footbar{flex-direction:column-reverse}
+    .footbar .btn{width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">C</div>
+    <div>
+      <h1>CCA–Foundations Practice Exam</h1>
+      <p class="sub">Claude Certified Architect — Foundations · self-check, scoring &amp; per-topic accuracy</p>
+    </div>
+  </div>
+  <div id="app"></div>
+  <footer class="fineprint">
+    Unofficial study tool · questions are calibrated approximations, not real exam items ·
+    pass mark on the real exam is 720/1000 scaled.
+  </footer>
+</div>
+
+<script>
+const QUESTIONS = __QUESTIONS_JSON__;
+
+const DOMAINS = {
+  D1:{name:'Agentic Architecture & Orchestration', weight:27, color:'#C2410C', tint:'#FBEAE1'},
+  D2:{name:'Tool Design & MCP Integration',        weight:18, color:'#0F766E', tint:'#DCEFED'},
+  D3:{name:'Claude Code Configuration & Workflows',weight:20, color:'#4338CA', tint:'#E6E6FB'},
+  D4:{name:'Prompt Engineering & Structured Output',weight:20, color:'#15803D', tint:'#DEF0E2'},
+  D5:{name:'Context Management & Reliability',      weight:15, color:'#B45309', tint:'#F7ECD6'},
+};
+const DOMAIN_ORDER = ['D1','D2','D3','D4','D5'];
+const STORE_KEY = 'cca_attempts_v1';
+
+let state = { view:'home', mode:null, questions:[], answers:{}, current:0, submitted:false, shuffle:true };
+const app = document.getElementById('app');
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function md(s){
+  s = esc(s);
+  s = s.replace(/`([^`]+)`/g,'<code>$1</code>');
+  s = s.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  s = s.replace(/\*([^*]+)\*/g,'<em>$1</em>');
+  return s;
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function byId(id){ return QUESTIONS.find(q=>q.id===id); }
+function domTag(d){
+  const m=DOMAINS[d];
+  return `<span class="tag" style="background:${m.tint};color:${m.color}">${d} · ${esc(m.name)}</span>`;
+}
+function scenarioTag(q){
+  return `<span class="tag" style="background:#F1EFE7;color:#6B6B63">Scenario ${q.scenario}: ${esc(q.scenarioTitle)}</span>`;
+}
+function loadAttempts(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEY)||'[]'); }catch(e){ return []; }
+}
+function saveAttempt(a){
+  const all = loadAttempts(); all.unshift(a);
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(all.slice(0,30))); }catch(e){}
+}
+function fmtDate(ts){
+  const d=new Date(ts);
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+
+/* ---------- mode setup ---------- */
+function startFull(){
+  let qs = QUESTIONS.slice();
+  if(state.shuffle) qs = shuffle(qs);
+  begin({type:'full', label:'Full Exam (60)'}, qs);
+}
+function startQuick(n){
+  const qs = shuffle(QUESTIONS).slice(0,n);
+  begin({type:'quick', label:`Quick Test (${n})`}, qs);
+}
+function startTopic(d){
+  let qs = QUESTIONS.filter(q=>q.domain===d);
+  qs = state.shuffle ? shuffle(qs) : qs;
+  begin({type:'topic', domain:d, label:`Topic: ${d} ${DOMAINS[d].name}`}, qs);
+}
+function begin(mode, qs){
+  state.mode = mode; state.questions = qs; state.answers = {};
+  state.current = 0; state.submitted = false; state.view = 'exam';
+  window.scrollTo(0,0); render();
+}
+
+/* ---------- scoring ---------- */
+function grade(){
+  const per = {}; let correct=0;
+  state.questions.forEach(q=>{
+    const d=q.domain; per[d]=per[d]||{c:0,t:0}; per[d].t++;
+    if(state.answers[q.id]===q.answer){ correct++; per[d].c++; }
+  });
+  const total=state.questions.length;
+  const pct = total? Math.round(correct/total*100):0;
+  return {correct,total,pct,per};
+}
+function readiness(pct){
+  if(pct>=80) return {cls:'good',label:'Go-signal',msg:"You're tracking to pass. Keep your weaker domains warm and re-skim the 12 heuristics before sitting."};
+  if(pct>=70) return {cls:'warn',label:'Almost there',msg:'Close to the comfort line. Shore up the weakest domains below, then retake before booking.'};
+  return {cls:'bad',label:'Keep studying',msg:'Below the ~70% comfort line. Focus your review on the weakest domains below and drill them by topic.'};
+}
+
+/* ---------- render: HOME ---------- */
+function renderHome(){
+  const counts={}; DOMAIN_ORDER.forEach(d=>counts[d]=QUESTIONS.filter(q=>q.domain===d).length);
+  const attempts = loadAttempts();
+
+  // rolling topic readiness across all stored attempts
+  let agg=null;
+  if(attempts.length){
+    agg={}; DOMAIN_ORDER.forEach(d=>agg[d]={c:0,t:0});
+    attempts.forEach(a=>{ if(a.per) Object.keys(a.per).forEach(d=>{ if(agg[d]){agg[d].c+=a.per[d].c; agg[d].t+=a.per[d].t;} }); });
+  }
+
+  const topicBtns = DOMAIN_ORDER.map(d=>
+    `<button class="chip-btn" data-action="topic" data-d="${d}" style="border-left:3px solid ${DOMAINS[d].color}">
+       ${d} — ${esc(DOMAINS[d].name)}
+       <span class="cap">${counts[d]} questions · ${DOMAINS[d].weight}% of exam</span>
+     </button>`).join('');
+
+  app.innerHTML = `
+    <div class="card mode-card">
+      <h3>Full Exam</h3>
+      <p>All ${QUESTIONS.length} questions across the 6 scenarios, weighted like the real exam. Time-box to ~120 min.</p>
+      <button class="btn primary" data-action="full">Start full exam</button>
+    </div>
+
+    <div class="card mode-card">
+      <h3>Quick Test</h3>
+      <p>A random sample for a fast readiness check. Pick a length:</p>
+      <div class="seg">
+        <button class="chip-btn" data-action="quick" data-n="10">10 questions</button>
+        <button class="chip-btn" data-action="quick" data-n="20">20 questions</button>
+        <button class="chip-btn" data-action="quick" data-n="30">30 questions</button>
+      </div>
+    </div>
+
+    <div class="card mode-card">
+      <h3>Practice by Topic</h3>
+      <p>Drill one domain at a time. Scores below feed your per-topic readiness.</p>
+      <div class="seg" style="flex-direction:column">${topicBtns}</div>
+    </div>
+
+    <label class="toggle">
+      <input type="checkbox" id="shuffleToggle" ${state.shuffle?'checked':''}>
+      Shuffle question order
+    </label>
+
+    ${agg ? `
+      <hr class="hr">
+      <h2 class="section-title" style="margin-top:0">Your topic readiness <span class="muted small">(across ${attempts.length} attempt${attempts.length>1?'s':''})</span></h2>
+      <div class="dombars">${DOMAIN_ORDER.filter(d=>agg[d].t>0).map(d=>domBar(d,agg[d])).join('')}</div>
+    ` : ''}
+
+    ${attempts.length ? `
+      <hr class="hr">
+      <h2 class="section-title" style="margin-top:0">Recent attempts</h2>
+      <ul class="attempts">
+        ${attempts.slice(0,8).map(a=>`
+          <li><span><b>${esc(a.label)}</b> — ${a.correct}/${a.total} (${a.pct}%)</span>
+              <span class="when">${fmtDate(a.ts)}</span></li>`).join('')}
+      </ul>
+      <div style="margin-top:12px"><button class="btn ghost sm" data-action="clear">Clear history</button></div>
+    ` : ''}
+  `;
+}
+function domBar(d,o){
+  const pct = o.t? Math.round(o.c/o.t*100):0;
+  const col = pct>=80?'var(--good)':pct>=70?'var(--warn)':'var(--bad)';
+  return `<div class="dombar">
+      <div class="row"><span class="nm" style="color:${DOMAINS[d].color}">${d} · ${esc(DOMAINS[d].name)}</span>
+        <span class="sc">${o.c}/${o.t} · ${pct}%</span></div>
+      <div class="track"><i style="width:${pct}%;background:${col}"></i></div>
+    </div>`;
+}
+
+/* ---------- render: EXAM ---------- */
+function renderExam(){
+  const qs=state.questions, i=state.current, q=qs[i];
+  const answered=Object.keys(state.answers).length;
+  const pct=Math.round((i+1)/qs.length*100);
+
+  const nav = qs.map((qq,idx)=>{
+    let cls='nav-chip';
+    if(state.answers[qq.id]) cls+=' answered';
+    if(idx===i) cls+=' current';
+    return `<button class="${cls}" data-action="jump" data-i="${idx}">${idx+1}</button>`;
+  }).join('');
+
+  const opts = ['A','B','C','D'].filter(L=>q.options[L]!=null).map(L=>{
+    const sel = state.answers[q.id]===L ? ' sel':'';
+    return `<button class="opt${sel}" data-action="pick" data-id="${q.id}" data-opt="${L}">
+        <span class="ltr">${L}</span><span class="otxt">${md(q.options[L])}</span>
+      </button>`;
+  }).join('');
+
+  app.innerHTML = `
+    <div class="examhead">
+      <span class="meta">${esc(state.mode.label)}</span>
+      <span class="meta">Question ${i+1} of ${qs.length} · ${answered} answered</span>
+    </div>
+    <div class="progress"><i style="width:${pct}%"></i></div>
+
+    <div class="navgrid"><b>Jump to question</b>${nav}</div>
+
+    <div class="card">
+      <div class="qmeta">${domTag(q.domain)} ${scenarioTag(q)}</div>
+      <p class="qtext">${md(q.q)}</p>
+      <div class="opts">${opts}</div>
+    </div>
+
+    <div class="footbar">
+      <button class="btn" data-action="prev" ${i===0?'disabled':''}>← Previous</button>
+      ${ i===qs.length-1
+          ? `<button class="btn primary" data-action="submit">Submit &amp; score</button>`
+          : `<button class="btn primary" data-action="next">Next →</button>` }
+    </div>
+    <div class="center" style="margin-top:14px">
+      <button class="btn ghost sm" data-action="submit">Submit now &amp; score</button>
+      &nbsp;<button class="btn ghost sm" data-action="home">Quit to menu</button>
+    </div>
+  `;
+}
+
+/* ---------- render: RESULTS ---------- */
+function renderResults(reviewMode){
+  const g=grade(); const r=readiness(g.pct);
+  const presentDomains=DOMAIN_ORDER.filter(d=>g.per[d]);
+
+  const reviewQs = reviewMode==='wrong'
+    ? state.questions.filter(q=>state.answers[q.id]!==q.answer)
+    : state.questions;
+
+  const review = reviewQs.map(q=>{
+    const picked=state.answers[q.id];
+    const opts=['A','B','C','D'].filter(L=>q.options[L]!=null).map(L=>{
+      let cls='opt';
+      if(L===q.answer) cls+=' correct';
+      else if(L===picked) cls+=' incorrect';
+      let mark='';
+      if(L===q.answer) mark='<span class="mark">✓</span>';
+      else if(L===picked) mark='<span class="mark">✗</span>';
+      return `<div class="${cls}"><span class="ltr">${L}</span><span class="otxt">${md(q.options[L])}</span>${mark}</div>`;
+    }).join('');
+    const got = picked===q.answer;
+    const status = picked==null
+      ? '<span class="tag" style="background:#F1EFE7;color:#6B6B63">Not answered</span>'
+      : got ? '<span class="tag" style="background:var(--good-tint);color:var(--good)">Correct</span>'
+            : '<span class="tag" style="background:var(--bad-tint);color:var(--bad)">Incorrect</span>';
+    return `<div class="card review-q">
+        <div class="qmeta">${status} ${domTag(q.domain)} ${scenarioTag(q)}</div>
+        <p class="qtext">${md(q.q)}</p>
+        <div class="opts">${opts}</div>
+        <div class="expl"><span class="lbl">Why</span>${md(q.explanation)}</div>
+      </div>`;
+  }).join('');
+
+  app.innerHTML = `
+    <div class="card">
+      <div class="muted small" style="font-weight:600;text-transform:uppercase;letter-spacing:.04em">${esc(state.mode.label)} — results</div>
+      <div class="score"><span class="big">${g.correct}<span class="muted" style="font-size:1.6rem">/${g.total}</span></span>
+        <span class="pct">${g.pct}%</span></div>
+      <div class="verdict ${r.cls}"><b>${r.label}</b>${r.msg}</div>
+      <p class="muted small" style="margin:14px 0 0">Practice % is a study proxy. The real exam is scaled 100–1000 (pass = 720) and shows 4 of 6 scenarios at random.</p>
+    </div>
+
+    <h2 class="section-title">Accuracy by topic</h2>
+    <div class="dombars">${presentDomains.map(d=>domBar(d,g.per[d])).join('')}</div>
+    ${ presentDomains.length>1 ? `<p class="muted small" style="margin-top:12px">Weakest domain is your highest-leverage review target — drill it from the menu via <b>Practice by Topic</b>.</p>`:'' }
+
+    <div class="btn-row" style="margin-top:24px">
+      ${reviewMode==='wrong'
+        ? `<button class="btn" data-action="review-all">Show all questions</button>`
+        : `<button class="btn" data-action="review-wrong">Show only incorrect</button>`}
+      <button class="btn" data-action="retake">Retake (new draw)</button>
+      <button class="btn primary" data-action="home">Back to menu</button>
+    </div>
+
+    <h2 class="section-title">${reviewMode==='wrong'?'Incorrect answers':'Review &amp; explanations'}
+      <span class="muted small">(${reviewQs.length} question${reviewQs.length!==1?'s':''})</span></h2>
+    ${ reviewQs.length ? review : '<div class="card center muted">Nothing to show here — you got everything right. 🎉</div>' }
+
+    <div class="center" style="margin-top:22px">
+      <button class="btn primary" data-action="home">Back to menu</button>
+    </div>
+  `;
+  window.scrollTo(0,0);
+}
+
+/* ---------- submit ---------- */
+function doSubmit(){
+  const unanswered = state.questions.length - Object.keys(state.answers).length;
+  if(unanswered>0 && !confirm(`${unanswered} question${unanswered>1?'s are':' is'} unanswered (counted as incorrect). Submit anyway?`)) return;
+  state.submitted=true; state.view='results';
+  const g=grade();
+  saveAttempt({ts:Date.now(), label:state.mode.label, correct:g.correct, total:g.total, pct:g.pct, per:g.per});
+  render();
+}
+
+/* ---------- dispatch ---------- */
+function render(){
+  if(state.view==='home') renderHome();
+  else if(state.view==='exam') renderExam();
+  else renderResults(state._review);
+}
+
+app.addEventListener('click', e=>{
+  const el=e.target.closest('[data-action]'); if(!el) return;
+  const a=el.dataset.action;
+  if(a==='full') startFull();
+  else if(a==='quick') startQuick(parseInt(el.dataset.n,10));
+  else if(a==='topic') startTopic(el.dataset.d);
+  else if(a==='pick'){ state.answers[parseInt(el.dataset.id,10)]=el.dataset.opt; renderExam(); }
+  else if(a==='jump'){ state.current=parseInt(el.dataset.i,10); renderExam(); }
+  else if(a==='prev'){ if(state.current>0){state.current--; renderExam(); window.scrollTo(0,0);} }
+  else if(a==='next'){ if(state.current<state.questions.length-1){state.current++; renderExam(); window.scrollTo(0,0);} }
+  else if(a==='submit') doSubmit();
+  else if(a==='review-wrong'){ state._review='wrong'; renderResults('wrong'); }
+  else if(a==='review-all'){ state._review=null; renderResults(null); }
+  else if(a==='retake'){ if(state.mode.type==='full') startFull(); else if(state.mode.type==='quick') startQuick(state.questions.length); else startTopic(state.mode.domain); }
+  else if(a==='home'){ state.view='home'; state._review=null; render(); window.scrollTo(0,0); }
+  else if(a==='clear'){ if(confirm('Clear your saved attempt history?')){ localStorage.removeItem(STORE_KEY); renderHome(); } }
+});
+
+app.addEventListener('change', e=>{
+  if(e.target.id==='shuffleToggle') state.shuffle=e.target.checked;
+});
+
+// keyboard: A–D to pick, arrows to navigate
+document.addEventListener('keydown', e=>{
+  if(state.view!=='exam') return;
+  const q=state.questions[state.current];
+  const k=e.key.toUpperCase();
+  if(['A','B','C','D'].includes(k) && q.options[k]!=null){ state.answers[q.id]=k; renderExam(); }
+  else if(e.key==='ArrowRight' && state.current<state.questions.length-1){ state.current++; renderExam(); window.scrollTo(0,0); }
+  else if(e.key==='ArrowLeft' && state.current>0){ state.current--; renderExam(); window.scrollTo(0,0); }
+});
+
+render();
+</script>
+</body>
+</html>

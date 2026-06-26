@@ -41,6 +41,8 @@ This is the control doc / index for this directory. Everything needed to pass li
 | `study-guide.md` | **High-yield condensed guide**: 12 decision heuristics, per-domain cheat sheets, factual recall, out-of-scope, distractor traps. Start here. |
 | `practice-exam.md` | **Synthesized 60-question practice exam** (no answers), scenario-based, weighted to match the real exam. |
 | `practice-exam-answers.md` | Answer key + explanations + which heuristic each tests. |
+| `index.html` | **Interactive practice-exam web app** (generated from the two files above). Full / quick / by-topic modes, instant scoring, per-domain accuracy, full review. Open locally or via GitHub Pages. |
+| `tools/` | `build_exam.py` + `exam.template.html` — regenerate `index.html` from the practice-exam `.md` files (`python3 tools/build_exam.py`). |
 
 ---
 
@@ -79,12 +81,14 @@ This is the control doc / index for this directory. Everything needed to pass li
 ## Published repo
 
 - **Public GitHub:** https://github.com/heyalexchoi-obin-ai/claude-certified-architect-foundations-study-kit
-- Includes: `README.md`, `study-guide.md`, `practice-exam.md`, `practice-exam-answers.md`, the guide transcription `exam-guide.md` (© Anthropic — attributed + takedown notice in README), and this `CLAUDE.md` (email removed).
+- **Live practice-exam app (GitHub Pages):** https://heyalexchoi-obin-ai.github.io/claude-certified-architect-foundations-study-kit/
+- Includes: `README.md`, `study-guide.md`, `practice-exam.md`, `practice-exam-answers.md`, the guide transcription `exam-guide.md` (© Anthropic — attributed + takedown notice in README), the interactive `index.html` + `tools/` (web app + its build script), and this `CLAUDE.md` (email removed).
 - **Excluded** (`.gitignore`, kept local only): `exam-guide.pdf` (binary original — the `.md` transcription carries the content).
-- To update the public repo later: edit the files, then `git add -A && git commit && git push` from this directory.
+- To update the public repo later: edit the files (re-run `python3 tools/build_exam.py` if you touched the practice-exam `.md`s), then `git add -A && git commit && git push` from this directory.
 
 ---
 
 ## Notes / log
 - 2026-06-25: Built the full kit (study guide, 60-Q practice exam + answer key, PDF saved + transcribed). Official practice exam unreachable (gated/404); synthesized substitute instead. Awaiting registration to confirm logistics + unlock official practice exam.
 - 2026-06-25: Published the shareable materials as a **public** GitHub repo (link above). Added `README.md` (human entry point: exam facts, file map, study path, unofficial disclaimer). Verified the official PDF/transcription and personal CLAUDE.md are git-ignored and absent from the remote.
+- 2026-06-26: Built an **interactive practice-exam web app** (`index.html`, single self-contained file). Modes: full (60), quick (10/20/30 random), by-topic (per-domain). Instant scoring + readiness verdict, **per-domain accuracy bars**, full review w/ explanations, localStorage attempt history + rolling topic readiness. Generated from the practice-exam `.md`s via `tools/build_exam.py` (single source of truth). Enabled GitHub Pages.

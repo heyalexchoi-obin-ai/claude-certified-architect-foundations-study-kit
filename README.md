@@ -1,6 +1,6 @@
 # Claude Certified Architect — Foundations: Study Kit
 
-An open, self-contained study kit for the **Claude Certified Architect – Foundations** exam: a condensed high-yield study guide, a 60-question practice exam, and a full answer key with explanations.
+An open, self-contained study kit for the **Claude Certified Architect – Foundations** exam: a condensed high-yield study guide, a 60-question practice exam, a full answer key with explanations, and an **interactive browser-based practice exam** (take it, get scored, review answers, track per-topic accuracy).
 
 > **Unofficial.** Not affiliated with, authorized, or endorsed by Anthropic. "Claude" and the certification name belong to Anthropic and are used here only to identify the exam this kit prepares for. The study guide, practice exam, and answer key are **original work**, synthesized from the *publicly described* structure of Anthropic's official exam guide (domains, task statements, scenarios, sample-question style); the practice questions are **calibrated approximations, not real exam items** — no guarantee they match what you'll see, and they are not exam dumps. This repo also includes `exam-guide.md`, a Markdown **transcription of Anthropic's official exam guide**: that content is **© Anthropic, All Rights Reserved**, reproduced here for educational reference only. If you hold the rights and want it removed, open an issue and it will be taken down promptly. Always prefer the official source (linked below).
 
@@ -39,6 +39,8 @@ The exam tests judgment, not trivia. The core insight behind this kit: the same 
 | [`practice-exam.md`](practice-exam.md) | 60 scenario-based questions, organized under the 6 official scenarios, each tagged with its domain and weighted to approximate the real exam. No answers inline. | **2 — take timed** |
 | [`practice-exam-answers.md`](practice-exam-answers.md) | Answer key: correct letter + concise explanation per question, each citing the heuristic it tests. | **3 — grade & review** |
 | [`exam-guide.md`](exam-guide.md) | Markdown transcription of Anthropic's official exam guide (**© Anthropic** — see disclaimer above) — the underlying source the rest is derived from. | reference |
+| [`index.html`](index.html) | **Interactive practice exam** — runs in any browser. Same 60 questions as a self-scoring web app: full exam, quick tests, or by-topic drills, with per-domain accuracy. | optional, anytime |
+| [`tools/`](tools/) | Build script (`build_exam.py`) + UI template that generate `index.html` from the two Markdown files. Only needed if you edit the questions or the app. | maintainers |
 
 ### How the materials relate
 
@@ -54,6 +56,25 @@ practice-exam-answers.md   in the official sample-question style
 ```
 
 The study guide is **not** a copy of the official guide — its value-add is the compression into 12 reusable decision rules. The practice exam is **not** a copy of the official sample questions — they're newly written to the same style and difficulty. Because everything derives from one public source, these can't surface anything the official guide doesn't already imply; the only true preview is Anthropic's own (gated) practice exam.
+
+---
+
+## Take the practice exam in your browser
+
+The same 60 questions, as a self-scoring web app — no markdown grading by hand.
+
+- **Online:** **[open the practice exam ▸](https://heyalexchoi-obin-ai.github.io/claude-certified-architect-foundations-study-kit/)** (GitHub Pages)
+- **Offline / locally:** download or clone the repo and **double-click `index.html`** — it's a single self-contained file (no install, no server, works from `file://`).
+
+What you get:
+
+- **Three modes** — **Full Exam** (all 60), **Quick Test** (random 10 / 20 / 30 for a fast readiness check), or **Practice by Topic** (drill one of the five domains).
+- **Instant scoring** with a go / almost / keep-studying readiness verdict (≥ 80% is the go-signal).
+- **Accuracy by topic** after every attempt, so your weakest domain is obvious — then drill it from the menu.
+- **Full review** — your answer vs. the correct one, with the explanation for every question.
+- **Trend tracking** — recent attempts and rolling per-topic readiness are saved locally in your browser (nothing leaves your machine).
+
+> The app is *generated from* `practice-exam.md` + `practice-exam-answers.md` (single source of truth). Editing questions → re-run `python3 tools/build_exam.py` to rebuild `index.html`.
 
 ---
 
