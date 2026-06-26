@@ -1,6 +1,6 @@
 # Claude Certified Architect — Foundations: Study Kit
 
-An open, self-contained study kit for the **Claude Certified Architect – Foundations** exam: a condensed high-yield study guide, a 60-question practice exam, a full answer key with explanations, and an **interactive browser-based practice exam** (take it, get scored, review answers, track per-topic accuracy).
+An open, self-contained study kit for the **Claude Certified Architect – Foundations** exam: a condensed high-yield study guide, a 65-question practice exam, a full answer key with explanations, and an **interactive browser-based practice exam** (take it, get scored, review answers, track per-topic accuracy).
 
 > **Unofficial.** Not affiliated with, authorized, or endorsed by Anthropic. "Claude" and the certification name belong to Anthropic and are used here only to identify the exam this kit prepares for. The study guide, practice exam, and answer key are **original work**, synthesized from the *publicly described* structure of Anthropic's official exam guide (domains, task statements, scenarios, sample-question style); the practice questions are **calibrated approximations, not real exam items** — no guarantee they match what you'll see, and they are not exam dumps. This repo also includes `exam-guide.md`, a Markdown **transcription of Anthropic's official exam guide**: that content is **© Anthropic, All Rights Reserved**, reproduced here for educational reference only. If you hold the rights and want it removed, open an issue and it will be taken down promptly. Always prefer the official source (linked below).
 
@@ -36,10 +36,10 @@ The exam tests judgment, not trivia. The core insight behind this kit: the same 
 | File | What it is | Start order |
 |---|---|---|
 | [`study-guide.md`](study-guide.md) | The high-yield doc. **§2 "The 12 Decision Heuristics" is the crux of the exam** — the recurring tradeoffs every answer turns on. Plus per-domain cheat sheets, factual recall (CLI flags, file paths, config keys), out-of-scope list, and common distractor traps. | **1 — read first** |
-| [`practice-exam.md`](practice-exam.md) | 60 scenario-based questions, organized under the 6 official scenarios, each tagged with its domain and weighted to approximate the real exam. No answers inline. | **2 — take timed** |
+| [`practice-exam.md`](practice-exam.md) | 65 scenario-based questions (60 core + 5 higher-difficulty bonus), organized under the 6 official scenarios, each tagged with its domain and weighted to approximate the real exam. No answers inline. | **2 — take timed** |
 | [`practice-exam-answers.md`](practice-exam-answers.md) | Answer key: correct letter + concise explanation per question, each citing the heuristic it tests. | **3 — grade & review** |
 | [`exam-guide.md`](exam-guide.md) | Markdown transcription of Anthropic's official exam guide (**© Anthropic** — see disclaimer above) — the underlying source the rest is derived from. | reference |
-| [`index.html`](index.html) | **Interactive practice exam** — runs in any browser. Same 60 questions as a self-scoring web app: full exam, quick tests, or by-topic drills, with per-domain accuracy. | optional, anytime |
+| [`index.html`](index.html) | **Interactive practice exam** — runs in any browser. Same 65 questions as a self-scoring web app: full exam, quick tests, or by-topic drills, with per-domain accuracy. | optional, anytime |
 | [`tools/`](tools/) | Build script (`build_exam.py`) + UI template that generate `index.html` from the two Markdown files. Only needed if you edit the questions or the app. | maintainers |
 
 ### How the materials relate
@@ -51,7 +51,7 @@ Anthropic's official exam guide  (included as exam-guide.md — © Anthropic)
 study-guide.md     →  distilled rules: the 12 heuristics + cheat sheets + recall
         │
         ▼
-practice-exam.md   →  60 fresh questions drilling those same task statements,
+practice-exam.md   →  65 fresh questions drilling those same task statements,
 practice-exam-answers.md   in the official sample-question style
 ```
 
@@ -61,14 +61,14 @@ The study guide is **not** a copy of the official guide — its value-add is the
 
 ## Take the practice exam in your browser
 
-The same 60 questions, as a self-scoring web app — no markdown grading by hand.
+The same 65 questions, as a self-scoring web app — no markdown grading by hand.
 
 - **Online:** **[open the practice exam ▸](https://heyalexchoi-obin-ai.github.io/claude-certified-architect-foundations-study-kit/)** (GitHub Pages)
 - **Offline / locally:** download or clone the repo and **double-click `index.html`** — it's a single self-contained file (no install, no server, works from `file://`).
 
 What you get:
 
-- **Three modes** — **Full Exam** (all 60), **Quick Test** (random 10 / 20 / 30 for a fast readiness check), or **Practice by Topic** (drill one of the five domains).
+- **Three modes** — **Full Exam** (all 65), **Quick Test** (random 10 / 20 / 30 for a fast readiness check), or **Practice by Topic** (drill one of the five domains).
 - **Instant scoring** with a go / almost / keep-studying readiness verdict (≥ 80% is the go-signal).
 - **Accuracy by topic** after every attempt, so your weakest domain is obvious — then drill it from the menu.
 - **Full review** — your answer vs. the correct one, with the explanation for every question.
@@ -86,7 +86,7 @@ A focused path, ~4–5 hours if you already build with this stack:
 2. **Skim the per-domain cheat sheets (§3) + factual recall (§4).** *(~30 min)*
 3. **Take `practice-exam.md` timed** (~2 hours, no notes). *(~2 hrs)*
 4. **Grade with `practice-exam-answers.md`.** Re-read the study-guide section for any domain you missed. *(~1 hr)*
-5. **Target ≥ 48/60 (80%)** on the practice set before booking. Re-skim the 12 heuristics + the distractor-traps list the morning of.
+5. **Target ≥ 52/65 (80%)** on the practice set before booking. Re-skim the 12 heuristics + the distractor-traps list the morning of. *(The real exam is scaled 100–1,000, pass 720 — not a raw %; treat your practice % as a study signal with margin.)*
 
 ---
 

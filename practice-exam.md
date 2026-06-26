@@ -1,8 +1,10 @@
-# CCA-Foundations — Synthesized Practice Exam (60 questions)
+# CCA-Foundations — Synthesized Practice Exam (65 questions)
 
 > **Not the official practice exam** (that one is gated behind the access request). These are synthesized to match the official guide's scenario-based format, difficulty, and distractor philosophy — 1 correct answer + 3 plausible distractors that someone with incomplete knowledge would pick.
 >
-> **How to use:** Answer all 60 (no penalty for guessing on the real exam — answer everything). Time-box to ~120 min for a realistic run. Then grade with `practice-exam-answers.md`. Target ≥ 80% before sitting the real exam (passing is 720/1000 scaled).
+> **Calibration note:** Per the official guide, "distractors are response options that a candidate with *incomplete knowledge or experience* might choose." So the wrong answers here are deliberately *plausible* — real techniques that are subtly suboptimal for the specific scenario, not strawmen. Read every option.
+>
+> **How to use:** Answer all 65 (no penalty for guessing on the real exam — answer everything). Time-box to ~120 min for a realistic run. Then grade with `practice-exam-answers.md`. Target ≥ 80% before sitting the real exam (passing is 720/1000 scaled).
 >
 > **Domain coverage** (≈ matches real weighting): D1 Agentic Architecture (heaviest) · D2 Tool/MCP · D3 Claude Code · D4 Prompt/Structured Output · D5 Context/Reliability. Each question is tagged `[D#]`.
 
@@ -23,7 +25,7 @@
 - A) Add a sentence to the system prompt: "Always verify the customer with `get_customer` before processing refunds."
 - B) Add a programmatic prerequisite gate that blocks `process_refund` until `get_customer` has returned a verified customer ID.
 - C) Add three few-shot examples showing `get_customer` being called before `process_refund`.
-- D) Lower the model temperature so the agent follows instructions more deterministically.
+- D) Implement a routing classifier that inspects each request and enables only the subset of tools appropriate to that request type.
 
 **Q3. [D2]** Logs show the agent frequently calls `get_customer` when users ask about orders (e.g., "where's order #12345?"). Both `get_customer` ("Retrieves customer information") and `lookup_order` ("Retrieves order details") have minimal descriptions. What is the most effective first step?
 
@@ -37,7 +39,7 @@
 - A) Instruct the agent in the system prompt to escalate any refund over $500.
 - B) A tool-call interception hook that blocks `process_refund` calls above $500 and redirects them to the escalation workflow.
 - C) A few-shot example showing the agent escalating a $600 refund.
-- D) Set `tool_choice: "any"` so the model is forced to consider escalation.
+- D) A nightly audit job that flags any processed refund over $500 for compliance review.
 
 **Q5. [D1]** A single customer message says: "My order arrived damaged, I was double-charged, and I want to update my email." What is the best way for the agent to handle this?
 
@@ -55,7 +57,7 @@
 
 **Q7. [D5]** Over a long multi-turn conversation, the agent starts losing track of the exact refund amount and order number it confirmed earlier, because history is being progressively summarized. What is the best fix?
 
-- A) Increase `max_tokens` so the full history always fits.
+- A) Keep the most recent N turns verbatim and only summarize older history.
 - B) Extract transactional facts (amounts, dates, order numbers, statuses) into a persistent "case facts" block included in each prompt, separate from summarized history.
 - C) Disable summarization and always send the entire raw transcript.
 - D) Ask the customer to re-state the order number each turn.
@@ -70,7 +72,7 @@
 **Q9. [D5]** A customer provides only a common name ("John Smith"), and `get_customer` returns three matching accounts. What should the agent do?
 
 - A) Select the most recently active account and proceed.
-- B) Process against all three accounts to be safe.
+- B) Infer the correct account by matching other details from the conversation (recent order, ZIP) and proceed with the best match.
 - C) Ask the customer for an additional identifier (email, order number, or account ID) to disambiguate.
 - D) Escalate to a human immediately.
 
@@ -130,9 +132,9 @@
 
 **Q17. [D5]** During a long debugging session, Claude starts giving inconsistent answers and referencing "typical patterns" rather than the specific classes it identified earlier. What helps most?
 
-- A) Restart the session from scratch every 20 minutes regardless of state.
+- A) Use `/clear` periodically and re-paste the original task, so the model starts each stretch fresh.
 - B) Have Claude maintain a scratchpad file recording key findings and reference it for later questions; use `/compact` when context fills with verbose discovery output.
-- C) Increase the temperature so answers are more varied.
+- C) Switch to a larger-context-window model so the entire session always fits in context.
 - D) Paste the entire codebase into the prompt at the start.
 
 **Q18. [D3]** You're building a `/deploy-check` skill that should only ever read files and run read-only validation — never modify anything — and you want it to prompt the developer for the target environment if they don't supply one. Which frontmatter combination fits?
@@ -140,7 +142,7 @@
 - A) `allowed-tools` restricted to read/validation tools, plus `argument-hint` for the environment parameter.
 - B) `context: fork` plus `model: haiku`.
 - C) `paths: ["deploy/**/*"]` plus `@import`.
-- D) `tool_choice: "any"` plus `argument-hint`.
+- D) `context: fork` plus `argument-hint` for the environment parameter.
 
 **Q19. [D5]** You return to a refactoring task the next day. Several files have changed substantially since your last session, and the prior session's tool results are now stale. What's the most reliable way to continue?
 
@@ -172,15 +174,15 @@
 
 - A) Subagents share memory by default, so something corrupted it.
 - B) Subagents operate with isolated context and do NOT inherit other agents' results; the search findings must be passed explicitly in the synthesis agent's prompt.
-- C) The coordinator must increase `max_tokens` on the synthesis agent.
+- C) The coordinator invokes synthesis before the search agent has finished, so the results aren't available yet.
 - D) The synthesis agent needs the web search tool to re-fetch everything.
 
 **Q23. [D1]** Your coordinator runs three independent subagents one after another, and total latency is high. The subagents don't depend on each other's output. How do you run them in parallel?
 
 - A) Emit multiple `Task` tool calls in a single coordinator response.
 - B) Spawn each subagent in a separate conversation turn, one per turn.
-- C) Set `tool_choice: "any"` to parallelize automatically.
-- D) Increase the iteration cap so the loop runs faster.
+- C) Set a `max_concurrent: 3` option in the coordinator config to run them simultaneously.
+- D) Pass all three subagent prompts as an array to a single `Task` call so they batch together.
 
 **Q24. [D5]** The web-search subagent times out on a complex topic. You're designing how that failure flows back to the coordinator to enable intelligent recovery. Best approach?
 
@@ -201,7 +203,7 @@
 - A) Add a disclaimer that sources may be approximate.
 - B) Require subagents to output structured claim-source mappings (URLs, document names, relevant excerpts) that downstream agents preserve through synthesis.
 - C) Have the report agent re-search every claim at the end.
-- D) Increase the synthesis agent's context window.
+- D) Have each subagent append a bibliography of all sources it consulted to the end of its output.
 
 **Q27. [D1]** Some research queries are simple and others are broad and multi-faceted. Routing every query through the full four-subagent pipeline wastes time on simple ones. What's the better coordinator design?
 
@@ -212,7 +214,7 @@
 
 **Q28. [D5]** Two credible sources report different market-size statistics for the same sector, and one is from 2021 while the other is from 2023. How should the synthesis handle this?
 
-- A) Average the two values.
+- A) Report only the more recent (2023) figure, since newer data supersedes older.
 - B) Pick the value from the more authoritative source and discard the other.
 - C) Annotate the conflict with source attribution and include publication/collection dates so the temporal difference isn't misread as a contradiction.
 - D) Omit the statistic entirely to avoid confusion.
@@ -221,14 +223,14 @@
 
 - A) Accept the gap and note it; re-running is too expensive.
 - B) Implement an iterative refinement loop: the coordinator evaluates synthesis output for gaps, re-delegates to search/analysis agents with targeted queries, and re-invokes synthesis until coverage is sufficient.
-- C) Tell the synthesis agent to make up plausible content for the thin subtopic.
+- C) Have the synthesis agent note the thin subtopic as a limitation and recommend the reader consult additional sources.
 - D) Restart the whole research run from scratch.
 
 **Q30. [D2]** A document-analysis subagent hits a transient parse error on one of ten documents. How should it behave?
 
 - A) Terminate the entire research workflow.
 - B) Attempt local recovery for the transient failure; if unrecoverable, propagate only that error to the coordinator along with partial results and what was attempted.
-- C) Return all ten documents as failed to be safe.
+- C) Fail the entire ten-document batch and return so the coordinator can retry the whole set.
 - D) Silently drop the document and report success on the other nine.
 
 ---
@@ -246,7 +248,7 @@
 **Q32. [D2]** The agent tries to use Edit to change a line, but the target text appears multiple times in the file, so Edit fails on the non-unique match. What's the reliable fallback?
 
 - A) Read the full file, then Write it back with the modification.
-- B) Lower the agent's temperature and retry Edit.
+- B) Use the Edit tool's `replace_all` option to change every occurrence at once.
 - C) Delete the file and recreate it from memory.
 - D) Use Glob to find a unique version of the file.
 
@@ -276,14 +278,14 @@
 - A) Expose content catalogs (issue summaries, documentation hierarchies, database schemas) as MCP resources so the agent has visibility without exploratory tool calls.
 - B) Increase the number of tools available to the agent.
 - C) Cache every tool result in CLAUDE.md.
-- D) Set `tool_choice: "any"` to force faster discovery.
+- D) Add a single `list_all_resources` tool the agent calls once to dump every issue, doc, and table.
 
 **Q37. [D5]** During a multi-phase exploration of a large system, the main agent's context fills with verbose discovery output and answers degrade. What's the best mitigation?
 
 - A) Delegate verbose exploration to subagents that return summaries, while the main agent preserves high-level coordination; have agents maintain scratchpad files for key findings.
-- B) Increase temperature to keep answers fresh.
+- B) Move to a larger-context model so all the discovery output fits at once.
 - C) Disable all tool output.
-- D) Restart from scratch whenever answers degrade.
+- D) Automatically truncate every tool result to its first few lines before it enters context.
 
 **Q38. [D2]** The agent misuses a generic `fetch_url` tool by passing it non-document URLs, causing failures. You want it to only operate on valid documents. What's the better tool design?
 
@@ -329,7 +331,7 @@
 
 - A) Add "be conservative and only report high-confidence findings."
 - B) Replace the vague instruction with explicit criteria: "flag a comment only when its claimed behavior contradicts the actual code behavior."
-- C) Lower the temperature.
+- C) Only run the comment-accuracy check on comments longer than two lines, to cut volume.
 - D) Ask the model to double-check each finding twice.
 
 **Q44. [D4]** A PR modifies 14 files. Your single-pass review (all files at once) gives detailed feedback on some files, superficial comments on others, misses obvious bugs, and even gives contradictory feedback. How should you restructure?
@@ -344,21 +346,21 @@
 - A) The session is fine; just add "review carefully" to the prompt.
 - B) A session retains its generation reasoning context, making it less likely to question its own decisions; use an independent review instance with no prior reasoning context.
 - C) Enable extended thinking and re-review in the same session.
-- D) Increase `max_tokens` so it can review more thoroughly.
+- D) Ask the same session to re-read its own diff from scratch before reviewing, to reset its perspective.
 
 **Q46. [D3]** After new commits, your reviewer re-runs and posts duplicate comments on issues it already flagged. How do you prevent this?
 
 - A) Include prior review findings in context and instruct Claude to report only new or still-unaddressed issues.
 - B) Delete all prior comments before each run.
 - C) Run the review only once per PR, never on updates.
-- D) Lower the temperature so it produces identical comments (which can be deduped).
+- D) Hash each comment's text and skip posting any hash that appeared in a previous run.
 
 **Q47. [D4]** Your reviewer's output format is inconsistent — sometimes it gives severity, sometimes not, sometimes suggests fixes, sometimes doesn't — making it hard to post structured comments. Detailed instructions haven't fixed it. What's most effective?
 
 - A) Provide few-shot examples demonstrating the exact desired output format (location, issue, severity, suggested fix).
 - B) Add "always be consistent" to the prompt.
 - C) Switch models.
-- D) Set `tool_choice: "auto"`.
+- D) Write an even more detailed prose specification of the required format.
 
 **Q48. [D4]** Two CI workflows use real-time Claude calls: (1) a blocking pre-merge check where developers wait, and (2) an overnight technical-debt report. Your manager proposes moving BOTH to the Message Batches API for 50% savings. How do you evaluate this?
 
@@ -371,8 +373,8 @@
 
 - A) Document testing standards, valuable test criteria, and available fixtures in CLAUDE.md, and provide the existing test files in context so generation avoids duplicating coverage.
 - B) Generate more tests so something useful slips through.
-- C) Run test generation in batch mode.
-- D) Use `tool_choice: "any"`.
+- C) Raise the max output token limit so it can write longer, more thorough test files.
+- D) Enable extended thinking so the model reasons longer about each test.
 
 **Q50. [D4]** One review category (style nitpicks) has a very high false-positive rate that's undermining developer trust in the accurate categories (bugs, security). What's a reasonable interim action?
 
@@ -391,14 +393,14 @@
 - A) Define an extraction tool with a JSON schema and use tool use (`tool_use`) to get the structured output from the tool call.
 - B) Add "make sure the JSON is valid" to the prompt.
 - C) Post-process the text output with a regex JSON repair step.
-- D) Lower temperature to 0.
+- D) Instruct the model to wrap its output in a ```json code block so it parses cleanly.
 
 **Q52. [D4]** Some source documents lack a "tax_id" field. With a required `tax_id` field, the model sometimes fabricates a plausible-looking value. How do you design the schema to prevent this?
 
 - A) Make `tax_id` an optional/nullable field so the model returns null when the source doesn't contain it.
 - B) Keep it required and add "don't make up values" to the prompt.
 - C) Default `tax_id` to an empty string in post-processing.
-- D) Set `tool_choice: "auto"`.
+- D) Keep the field required but add a few-shot example showing it left blank when the source lacks it.
 
 **Q53. [D4]** Your "document_type" field must handle a known set of categories but also gracefully accommodate new, unforeseen types. What's the best schema design?
 
@@ -411,7 +413,7 @@
 
 - A) Send a follow-up request that includes the original document, the failed extraction, and the specific validation error to guide correction.
 - B) Retry the identical request unchanged a few times.
-- C) Lower the temperature and retry the same prompt.
+- C) Split the document into smaller chunks and run the extraction on each.
 - D) Skip the document and log it as unprocessable.
 
 **Q55. [D5]** Extraction of "contract_end_date" keeps failing validation. On inspection, the date simply isn't present in the source documents. Will retry-with-feedback help?
@@ -446,8 +448,8 @@
 
 - A) Strict schemas guarantee correctness; this must be a parsing bug.
 - B) Schemas eliminate syntax errors but NOT semantic errors; extract `calculated_total` alongside `stated_total` and flag discrepancies (or add a `conflict_detected` boolean).
-- C) Increase `max_tokens`.
-- D) Switch `tool_choice` to `"auto"`.
+- C) Add tighter type and format constraints to the `total` field in the schema.
+- D) Add a prompt instruction telling the model to double-check that line items sum to the total.
 
 **Q60. [D4]** You batch-process 100 documents via the Message Batches API. Eight fail because they exceeded the context limit. How do you handle the failures efficiently?
 
@@ -458,4 +460,52 @@
 
 ---
 
-*End of 60 questions. Grade with `practice-exam-answers.md`.*
+## Bonus — Higher-Difficulty Questions
+*Added in the calibration pass. Same six scenarios, tougher distractors — every wrong option is a real technique a competent architect might reach for. Tagged by scenario and domain.*
+
+### Scenario 1 — Customer Support Resolution Agent
+
+**Q61. [D1]** Your support agent resolves only 55% of cases on first contact, well below the 80% target. Logs show it escalates straightforward cases it could handle (standard damage replacements with photo evidence) while attempting to autonomously resolve complex cases that require policy exceptions. What most effectively improves escalation calibration?
+
+- A) Add explicit escalation criteria to the system prompt, with few-shot examples demonstrating when to escalate versus resolve autonomously.
+- B) Have the agent self-report a 1–10 confidence score before each response and automatically route to a human when it falls below a threshold.
+- C) Train a separate classifier on historical tickets to predict which requests need escalation before the main agent begins.
+- D) Run sentiment analysis on the customer's messages and escalate when negative sentiment exceeds a threshold.
+
+**Q62. [D5]** Your refund agent occasionally retries `process_refund` after a network timeout, and a few customers have been refunded twice. What most reliably prevents double execution?
+
+- A) Make `process_refund` idempotent: have the agent pass a unique idempotency key per refund so retries of the same request are de-duplicated server-side.
+- B) Add a system-prompt instruction telling the agent never to retry a refund that may have already succeeded.
+- C) Wrap the call in a try/catch that swallows timeout errors and continues.
+- D) Disable automatic retries entirely so a refund is attempted only once.
+
+### Scenario 3 — Multi-Agent Research System
+
+**Q63. [D1]** Your research coordinator fans out five parallel search subagents, then a synthesis agent. Two of the five searches depend on entities discovered by a third (you don't know the company names until the first search returns), so running all five at once yields empty results for the two dependent ones. What's the best design?
+
+- A) Stage the work: run the discovery search first, then fan out the dependent searches in parallel once their inputs are known, then synthesize.
+- B) Run all five in parallel but give the two dependent agents the web-search tool so they can discover the entities themselves.
+- C) Increase the iteration cap so the coordinator re-runs the empty searches until they return data.
+- D) Merge all five searches into one large subagent prompt so nothing is missing.
+
+### Scenario 4 — Developer Productivity Tools
+
+**Q64. [D2]** Your coding agent has 28 tools, several with overlapping purposes (`search_code`, `find_symbol`, `grep_repo`, `locate_definition`). It frequently picks the wrong one or calls several in sequence. Beyond improving the descriptions, what's the most effective structural change?
+
+- A) Consolidate the overlapping search tools into one well-described tool with a `mode` parameter, reducing selection ambiguity.
+- B) Add a meta-tool that lists every tool and its purpose so the agent can look them up before choosing.
+- C) Increase the model's reasoning budget so it deliberates longer before selecting a tool.
+- D) Reorder the tool definitions so the most commonly used search tool appears first in the list.
+
+### Scenario 6 — Structured Data Extraction
+
+**Q65. [D4]** Your extraction schema works for flat invoices, but some documents contain a variable number of line items, each with sub-fields (description, quantity, unit price). The model sometimes flattens them or drops items. Which schema design most reliably captures this?
+
+- A) Define `line_items` as an array of objects with a fixed sub-schema (`description`, `quantity`, `unit_price`), so each item is validated structurally.
+- B) Add numbered fields (`item_1_desc`, `item_2_desc`, …) up to a generous maximum to cover the largest expected invoice.
+- C) Capture all line items as a single free-text block and parse them downstream in a separate step.
+- D) Keep the flat schema but instruct the model in the prompt to be careful to include every line item.
+
+---
+
+*End of 65 questions. Grade with `practice-exam-answers.md`.*
